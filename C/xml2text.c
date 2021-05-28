@@ -21,7 +21,7 @@ int main( int argc, char **argv){
 
   //処理用および書き出し用
   //よくわからんけど xmlTextReaderPtrはポインタなのか上手に保存できないため
-  //export_readerを政策
+  //書き出し用に export_readerを使用する
   xmlTextReaderPtr reader;
   xmlTextReaderPtr export_reader;
 
@@ -58,6 +58,7 @@ int main( int argc, char **argv){
   printf("( ´－｀) .｡oO（解析中...)\n");
   /* Parse XML */
   while( 1 == (ret = xmlTextReaderRead(reader)) ){
+
     int a = 0;
     a = processNode(reader);
     //タグが "node"だった場合
@@ -81,6 +82,7 @@ int main( int argc, char **argv){
   if (0 != ret) {
     fprintf(stderr, "%s : failed to parse\n", input_file);
   }
+
   printf("ｷﾀ━━━━━━━━━━━━━━━(ﾟ∀ﾟ)━━━━━━━━━━━━━━━!!");
   /* Free reader */
   xmlFreeTextReader(reader);
@@ -165,7 +167,9 @@ void export_text( xmlTextReaderPtr reader ){
 
   if (1 == xmlTextReaderHasAttributes(reader)) {
     ret = xmlTextReaderMoveToFirstAttribute(reader);
+
     while(1 == ret) {
+
       //lat="???" lon="???"の検索
       if( xmlStrEqual( xmlCharStrdup("lat"), xmlTextReaderConstName(reader))){
         lat = xmlTextReaderConstValue(reader);
@@ -178,6 +182,7 @@ void export_text( xmlTextReaderPtr reader ){
   }
 
   if( xmlStrlen(lat) > 0 && xmlStrlen(lon) > 0 ){
+
     fp = fopen( text_name, "a");
     fprintf( fp, "%s\n%s\n", lat, lon);
     fclose( fp );
